@@ -1,0 +1,98 @@
+:root {
+  --neon-cyan: #00e5ff;
+  --neon-purple: #c084fc;
+  --neon-magenta: #bd00ff;
+  --neon-green: #39ff14;
+  --neon-red: #ff4f4f;
+  --neon-gold: #ffd700;
+  --bg-dark: #0b0c10;
+  
+  --sans: 'Courier New', system-ui, -apple-system, sans-serif;
+  --heading: 'Courier New', system-ui, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font-family: var(--sans);
+  background-color: var(--bg-dark);
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden; /* Prevent page scrolls */
+  user-select: none; /* Prevent selection highlights during typing */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-dark);
+  color: #ffffff;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-dark);
+  border-inline: none;
+  min-height: auto;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulseNeon {
+  0%, 100% { filter: drop-shadow(0 0 5px var(--neon-cyan)); }
+  50% { filter: drop-shadow(0 0 15px var(--neon-cyan)); }
+}
+
+@keyframes pulseGold {
+  0%, 100% { filter: drop-shadow(0 0 5px var(--neon-gold)); }
+  50% { filter: drop-shadow(0 0 18px var(--neon-gold)); }
+}
+
+@keyframes flashRed {
+  0%, 100% { background-color: rgba(255, 79, 79, 0); }
+  50% { background-color: rgba(255, 79, 79, 0.15); }
+}
+
+@keyframes glitch {
+  0% { text-shadow: 2px 0 0 rgba(255,0,0,0.5), -2px 0 0 rgba(0,0,255,0.5); }
+  50% { text-shadow: -2px 0 0 rgba(255,0,0,0.5), 2px 0 0 rgba(0,0,255,0.5); }
+  100% { text-shadow: 2px 0 0 rgba(255,0,0,0.5), -2px 0 0 rgba(0,0,255,0.5); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse {
+  animation: pulseNeon 2s infinite ease-in-out;
+}
+
+.animate-scale-up {
+  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-bounce {
+  animation: pulseGold 1.5s infinite ease-in-out;
+}

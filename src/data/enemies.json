@@ -1,0 +1,38 @@
+{
+  "basic": {
+    "type": "basic",
+    "hp": 50,
+    "speed": 1.2,
+    "damage": 10,
+    "color": "#ff4f4f",
+    "size": 1.0,
+    "points": 100
+  },
+  "fast": {
+    "type": "fast",
+    "hp": 30,
+    "speed": 2.2,
+    "damage": 5,
+    "color": "#39ff14",
+    "size": 0.8,
+    "points": 150
+  },
+  "heavy": {
+    "type": "heavy",
+    "hp": 120,
+    "speed": 0.7,
+    "damage": 25,
+    "color": "#bd00ff",
+    "size": 1.4,
+    "points": 250
+  },
+  "boss": {
+    "type": "boss",
+    "hp": 400,
+    "speed": 0.4,
+    "damage": 40,
+    "color": "#ffd700",
+    "size": 2.0,
+    "points": 1000
+  }
+}

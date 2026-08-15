@@ -1,0 +1,798 @@
+# Keyboard Warrior — v1.0 Product Requirements Document
+
+**Version:** v1.0
+**Project Type:** Typing + Beat-'Em-Up Game
+**Target Platform:** Windows
+**Engine:** Godot 4.x
+**Primary Language:** GDScript
+**Development Level:** Beginner Game Developer
+**Future Direction:** AI / ML / LLM / Agent integration in v1.1+
+
+---
+
+# 1. Product Vision
+
+Build a simple playable typing-combat game where the player controls a stickman fighter and defeats enemies by typing words correctly and quickly.
+
+### Core Gameplay
+
+```text
+Enemy appears
+      ↓
+Word appears
+      ↓
+Player types word
+      ↓
+Typing accuracy/speed calculated
+      ↓
+Character performs attack
+      ↓
+Enemy takes damage
+      ↓
+Combo increases
+      ↓
+Next enemy / wave
+```
+
+The v1.0 goal is **not to create a huge game**.
+
+The goal is:
+
+> "Create a small but genuinely playable typing combat game."
+
+---
+
+# 2. v1.0 Scope
+
+## Must Have
+
+* Player stickman
+* Enemy
+* Player movement
+* Keyboard input
+* Word generation
+* Typing system
+* Attack system
+* Damage system
+* Health
+* Combo
+* Enemy AI
+* Enemy death
+* Waves
+* Score
+* Basic HUD
+* Sound effects
+* One playable arena
+* Win/lose state
+* Main menu
+* Restart system
+
+## Should Have
+
+* Multiple enemy types
+* Special attack
+* Difficulty levels
+* Accuracy percentage
+* WPM
+* Basic ranking
+
+## Not v1.0
+
+* LLM
+* AI Agent
+* ML model
+* Multiplayer
+* Online accounts
+* Anime characters
+* Complex story
+* Open world
+* Advanced graphics
+* Steam integration
+
+These can come later.
+
+---
+
+# 3. Game Architecture
+
+Instead of thinking:
+
+```text
+Frontend
+Backend
+Database
+```
+
+think:
+
+```text
+                GAME
+                 │
+       ┌─────────┴─────────┐
+       │                   │
+   GAME CLIENT          GAME DATA
+       │                   │
+       ├── UI              ├── Words
+       ├── Player          ├── Enemies
+       ├── Enemy           ├── Attacks
+       ├── Combat          └── Levels
+       ├── Typing
+       ├── Audio
+       └── Camera
+```
+
+For v1.0, **everything can run locally**.
+
+---
+
+# 4. Frontend / Game Client
+
+This is everything the player sees and interacts with.
+
+### Components
+
+| Component     | Responsibility          |
+| ------------- | ----------------------- |
+| Main Menu     | Start / Settings / Quit |
+| Game Scene    | Main gameplay           |
+| Player        | Character and movement  |
+| Enemy         | Enemy presentation      |
+| HUD           | HP, combo, score, word  |
+| Camera        | Follow player / combat  |
+| Animation     | Movement and attacks    |
+| VFX           | Hit effects             |
+| Audio         | Music and sound         |
+| Result Screen | Score / rank / restart  |
+
+---
+
+# 5. Game Core
+
+This is the actual "brain" of the game.
+
+| System             | Responsibility           |
+| ------------------ | ------------------------ |
+| Input Manager      | Read keyboard            |
+| Player Controller  | Move player              |
+| Typing Manager     | Process typed characters |
+| Word Manager       | Select words             |
+| Combat Manager     | Execute attacks          |
+| Damage Manager     | Calculate damage         |
+| Combo Manager      | Maintain combo           |
+| Enemy Manager      | Manage enemies           |
+| Enemy AI           | Enemy decisions          |
+| Wave Manager       | Spawn waves              |
+| Score Manager      | Calculate score          |
+| Game Manager       | Control game state       |
+| Difficulty Manager | Control difficulty       |
+
+---
+
+# 6. Data Layer
+
+Keep game configuration separate from code.
+
+Example:
+
+```text
+data/
+│
+├── words.json
+├── enemies.json
+├── attacks.json
+├── levels.json
+└── difficulty.json
+```
+
+### Example words.json
+
+```json
+{
+    "easy": [
+        "run",
+        "jump",
+        "fire",
+        "kick"
+    ],
+    "medium": [
+        "destroy",
+        "warrior",
+        "battle"
+    ]
+}
+```
+
+This becomes very useful later because your **LLM can generate/update this data in v1.1**.
+
+---
+
+# 7. Player System
+
+### v1.0 abilities
+
+```text
+Move
+Jump
+Basic Attack
+Heavy Attack
+Special Attack
+Take Damage
+Die
+```
+
+Example controls:
+
+| Key         | Action       |
+| ----------- | ------------ |
+| A / D       | Move         |
+| Space       | Jump         |
+| Word typing | Attack       |
+| Enter       | Heavy attack |
+| Shift       | Special      |
+| Esc         | Pause        |
+
+---
+
+# 8. Typing System
+
+This is the most important system.
+
+### Flow
+
+```text
+Word Manager
+     ↓
+"DESTROY"
+     ↓
+Typing Manager
+     ↓
+D → E → S → T → R → O → Y
+     ↓
+Validation
+     ↓
+Perfect / Good / Miss
+     ↓
+Combat
+```
+
+### Track
+
+* Current word
+* Typed characters
+* Accuracy
+* Typing speed
+* Completion time
+* Mistakes
+* Combo
+
+---
+
+# 9. Combat System
+
+Example:
+
+```text
+Word completed
+      ↓
+Check accuracy
+      ↓
+Calculate attack power
+      ↓
+Play animation
+      ↓
+Hit enemy
+      ↓
+Apply damage
+      ↓
+Update combo
+```
+
+### Example
+
+| Performance   | Attack   |
+| ------------- | -------- |
+| <70% accuracy | Weak     |
+| 70–89%        | Normal   |
+| 90–99%        | Strong   |
+| 100%          | Critical |
+
+This gives typing skill a direct gameplay impact.
+
+---
+
+# 10. Combo System
+
+Example:
+
+```text
+Word 1 → Hit
+Word 2 → Hit
+Word 3 → Hit
+Word 4 → Critical
+
+COMBO ×4
+```
+
+Combo breaks when:
+
+* Player makes too many mistakes
+* Player takes damage
+* Word timeout occurs
+
+---
+
+# 11. Enemy System
+
+Start with **2–3 enemies**.
+
+### Enemy 1 — Basic
+
+```text
+Find player
+↓
+Move toward player
+↓
+Attack
+↓
+Take damage
+↓
+Die
+```
+
+### Enemy 2 — Fast
+
+* Low HP
+* High movement speed
+* Frequent attacks
+
+### Enemy 3 — Heavy
+
+* High HP
+* Slow movement
+* Strong attack
+
+---
+
+# 12. Enemy AI
+
+Don't use an LLM for enemy movement in v1.0.
+
+Use a simple **Finite State Machine**.
+
+```text
+IDLE
+ ↓
+CHASE
+ ↓
+ATTACK
+ ↓
+HIT
+ ↓
+STUN
+ ↓
+DEAD
+```
+
+This is faster, cheaper and easier to debug.
+
+---
+
+# 13. Wave System
+
+Instead of creating many levels, use one arena with waves.
+
+```text
+Wave 1
+  ↓
+3 Basic enemies
+  ↓
+Wave 2
+  ↓
+2 Basic + 1 Fast
+  ↓
+Wave 3
+  ↓
+2 Fast + 1 Heavy
+  ↓
+Boss
+  ↓
+Victory
+```
+
+This keeps v1.0 manageable.
+
+---
+
+# 14. HUD
+
+The player should see:
+
+```text
+┌─────────────────────────────────────────┐
+│ HP ██████████             ENEMY ██████ │
+│                                         │
+│                  👾                     │
+│                                         │
+│             COMBO × 12                  │
+│                                         │
+│              DESTROY                    │
+│              DES█                       │
+│                                         │
+│   WPM: 72     ACC: 96%       SCORE 3200│
+└─────────────────────────────────────────┘
+```
+
+### HUD components
+
+* Player HP
+* Enemy HP
+* Current word
+* Typed text
+* Combo
+* Score
+* WPM
+* Accuracy
+* Special meter
+
+---
+
+# 15. Game States
+
+Create a central Game Manager.
+
+```text
+MAIN_MENU
+    ↓
+PLAYING
+    ↓
+PAUSED
+    ↓
+GAME_OVER
+    ↓
+RESULT
+    ↓
+MAIN_MENU
+```
+
+This prevents different systems from becoming disconnected.
+
+---
+
+# 16. Recommended Project Structure
+
+```text
+KeyboardWarrior/
+│
+├── project.godot
+│
+├── scenes/
+│   ├── main/
+│   │   ├── MainMenu.tscn
+│   │   ├── Game.tscn
+│   │   └── Result.tscn
+│   │
+│   ├── player/
+│   │   └── Player.tscn
+│   │
+│   ├── enemies/
+│   │   ├── BasicEnemy.tscn
+│   │   ├── FastEnemy.tscn
+│   │   └── HeavyEnemy.tscn
+│   │
+│   └── ui/
+│       └── HUD.tscn
+│
+├── scripts/
+│   ├── player/
+│   ├── enemies/
+│   ├── combat/
+│   ├── typing/
+│   ├── game/
+│   ├── ui/
+│   └── managers/
+│
+├── data/
+│   ├── words.json
+│   ├── enemies.json
+│   ├── attacks.json
+│   └── difficulty.json
+│
+├── assets/
+│   ├── characters/
+│   ├── enemies/
+│   ├── backgrounds/
+│   ├── animations/
+│   ├── vfx/
+│   ├── audio/
+│   └── fonts/
+│
+└── README.md
+```
+
+---
+
+# 17. Development Order
+
+Do NOT build everything simultaneously.
+
+### Phase 1 — Learn Godot
+
+```text
+Godot
+ ↓
+Scene
+ ↓
+Node
+ ↓
+Input
+ ↓
+Animation
+ ↓
+Signals
+```
+
+### Phase 2 — First Prototype
+
+Build only:
+
+```text
+Player
++
+Enemy
++
+Keyboard
++
+Word
++
+Attack
+```
+
+Goal:
+
+> Type "FIRE" → player attacks enemy.
+
+---
+
+### Phase 3 — Combat
+
+Add:
+
+```text
+HP
+Damage
+Death
+Combo
+Score
+```
+
+---
+
+### Phase 4 — Enemy AI
+
+Add:
+
+```text
+Idle
+Chase
+Attack
+Hit
+Death
+```
+
+---
+
+### Phase 5 — Game Loop
+
+Add:
+
+```text
+Waves
+↓
+Victory
+↓
+Score
+↓
+Result
+```
+
+---
+
+### Phase 6 — UI
+
+Add:
+
+```text
+Main Menu
+HUD
+Pause
+Game Over
+Result
+```
+
+---
+
+### Phase 7 — Polish
+
+Add:
+
+```text
+Animations
+VFX
+Sound
+Camera shake
+Better backgrounds
+Better UI
+```
+
+---
+
+# 18. v1.0 Definition of Done
+
+v1.0 is complete when a player can:
+
+1. Open the game.
+2. Start a game.
+3. Control the stickman.
+4. See an enemy.
+5. Receive a word.
+6. Type the word.
+7. Attack the enemy.
+8. Damage the enemy.
+9. Build a combo.
+10. Defeat enemies.
+11. Complete waves.
+12. Lose if HP reaches zero.
+13. Finish the game.
+14. See score, WPM and accuracy.
+15. Restart and play again.
+
+---
+
+# 19. Future AI Architecture
+
+The important part is that v1.0 should be designed so AI can be plugged in later.
+
+### v1.0
+
+```text
+Player
+ ↓
+Typing Data
+ ↓
+Game Logic
+ ↓
+Fixed Difficulty
+```
+
+### v1.1
+
+```text
+Player
+ ↓
+Typing Data
+ ↓
+Player Skill Analyzer
+ ↓
+AI Difficulty System
+ ↓
+Game Director
+ ↓
+Game
+```
+
+### Later
+
+```text
+             ┌── ML Skill Model
+             │
+Player Data ─┼── LLM Word Generator
+             │
+             └── AI Game Agent
+                       ↓
+                 Game Director
+                       ↓
+                     Game
+```
+
+That is where your **AI & DS background becomes meaningful**.
+
+---
+
+# 20. Technology Stack
+
+| Layer           | Technology                 |
+| --------------- | -------------------------- |
+| Game Engine     | Godot 4.x                  |
+| Programming     | GDScript                   |
+| Game UI         | Godot Control Nodes        |
+| Animation       | AnimationPlayer / Sprite2D |
+| AI v1.0         | FSM                        |
+| Data            | JSON                       |
+| Audio           | Godot Audio                |
+| Art             | Krita / Aseprite / Blender |
+| Version Control | Git + GitHub               |
+| Testing         | Godot Debugger             |
+| Build           | Godot Windows Export       |
+
+### Future
+
+| Technology | Version                             |
+| ---------- | ----------------------------------- |
+| ML         | Python + scikit-learn/PyTorch       |
+| LLM        | Gemini/OpenAI/etc.                  |
+| Agent      | Python agent framework/custom agent |
+| API        | FastAPI                             |
+| Database   | SQLite/PostgreSQL                   |
+
+---
+
+# 21. Backend — Important Decision
+
+For **v1.0: NO backend is required.**
+
+Don't build:
+
+```text
+Godot → API → Database
+```
+
+just because you're used to web development.
+
+Build:
+
+```text
+Godot
+  ↓
+Local Game Systems
+  ↓
+Local Data
+```
+
+Later, when AI is introduced:
+
+```text
+Godot Game
+     ↓
+FastAPI Backend
+     ↓
+AI/ML Services
+     ↓
+LLM / Agent
+```
+
+This keeps v1.0 simple while preserving a clean path toward an AI-powered v1.1.
+
+---
+
+# 22. Final v1.0 Architecture
+
+```text
+                    KEYBOARD WARRIOR v1.0
+                             │
+             ┌───────────────┴───────────────┐
+             │                               │
+       PRESENTATION                       GAME CORE
+             │                               │
+      ┌──────┼──────┐             ┌─────────┼─────────┐
+      │      │      │             │         │         │
+     UI   Player  Enemy         Typing    Combat     AI
+      │      │      │             │         │       (FSM)
+      └──────┴──────┘             │         │
+             │                    └────┬────┘
+             │                         │
+             └──────────┬──────────────┘
+                        │
+                    GAME DATA
+                        │
+             ┌──────────┼──────────┐
+             │          │          │
+           Words      Enemies    Attacks
+```
+
+### Your development rule
+
+**v1.0 = Game first.**
+**v1.1 = AI second.**
+**v1.2 = Visual/gameplay polish.**
+
+That way you learn game development without getting buried in LLMs, agents, APIs and backend work too early.

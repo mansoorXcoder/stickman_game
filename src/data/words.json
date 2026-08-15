@@ -1,0 +1,24 @@
+{
+  "easy": [
+    "run", "jump", "kick", "punch", "jab", "slam", "dodge", "spin", "dash",
+    "hit", "blow", "hurt", "pain", "rage", "clash", "fight", "slap", "beat",
+    "hook", "block", "parry", "dash", "flip", "fall", "rise", "glow", "fire"
+  ],
+  "medium": [
+    "warrior", "fighter", "strike", "combat", "shadow", "attack", "damage",
+    "health", "defeat", "victory", "double", "triple", "energy", "charge",
+    "combo", "meteor", "impact", "counter", "thrust", "reflex", "skills",
+    "action", "motion", "danger", "hazard", "threat", "shield", "spirit"
+  ],
+  "hard": [
+    "keyboard", "assassinate", "championship", "demolish", "lightning",
+    "hurricane", "adrenaline", "retribution", "annihilate", "apocalypse",
+    "desolation", "shatterstorm", "devastation", "juggernaut", "onslaught",
+    "obliterate", "conqueror", "resolution", "invincible", "retaliate"
+  ],
+  "boss": [
+    "antigravity", "supercalifragilistic", "counterattack", "invulnerability",
+    "ultrablastwave", "cyberwarfare", "machinelearning", "artificialintelligence",
+    "transcendence", "electromagnetic", "thermonuclear", "unstoppableforce"
+  ]
+}
